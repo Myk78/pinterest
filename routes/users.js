@@ -1,9 +1,49 @@
-var express = require('express');
-var router = express.Router();
+const mongoose = require('mongoose');
+const plm = require('passport-local-mongoose');
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+mongoose.connect("mongodb://127.0.0.1:27017/pinterestclone");
+
+// Define the schema for a user
+const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  number: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  profileImage: {
+    type: String, // URL or path to the profile image
+    default: ''
+  },
+  boards: {
+    type: [String], // Array of strings to represent board IDs or board names
+    default: [] // Default state is an empty array
+  }
+}, {
+  timestamps: true // Adds createdAt and updatedAt timestamps
 });
+userSchema.plugin(plm);
 
-module.exports = router;
+// Create and export the model
+module.exports  = mongoose.model('User', userSchema);
+
