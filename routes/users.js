@@ -23,8 +23,7 @@ const userSchema = new mongoose.Schema({
     trim: true
   },
   password: {
-    type: String,
-    required: true
+    type: String
   },
   number: {
     type: String,
@@ -36,11 +35,9 @@ const userSchema = new mongoose.Schema({
     default: ''
   },
   boards: {
-    type: [String], // Array of strings to represent board IDs or board names
+    type: Array, // Array of strings to represent board IDs or board names
     default: [] // Default state is an empty array
   }
-}, {
-  timestamps: true // Adds createdAt and updatedAt timestamps
 });
 userSchema.plugin(plm);
 
