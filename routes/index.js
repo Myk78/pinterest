@@ -3,6 +3,7 @@ var router = express.Router();
 var userModel = require('./users');
 const passport = require('passport');
 const localStrategy = require('passport-local');
+const upload = require('./multer');
 
 // Passport configuration
 passport.use(new localStrategy(userModel.authenticate()));
@@ -13,11 +14,11 @@ passport.deserializeUser(userModel.deserializeUser());
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index');
+  res.render('index',{nav:true});
 });
 
 router.get('/register', function(req, res, next) {
-  res.render('register');
+  res.render('register',{nav:true});
 });
 
 // Register post route with error handling 
@@ -44,10 +45,7 @@ router.post('/register', function(req, res, next) {
   //   email: req.body.email ,
   //   number: req.body.number ,  
   // });
-  // same as commented code above but it's more precise
-//   let { username, email, name,number } = req.body;
-//   let userdata = new userModel({ username, email, name,number });
-//   userModel.register(userdata,req.body.password).then(function(){
+//   userModel.register(user,req.body.password).then(function(){
 //     passport.authenticate("local")(req,res,function(){
 //       res.redirect('/profile');
 //     });
@@ -55,8 +53,9 @@ router.post('/register', function(req, res, next) {
 // });
 
 // Profile route
-router.get('/profile', isloggedIn, function(req, res, next) {
-  res.render('profile');
+router.get('/profile', isloggedIn, async function(req, res, next) {
+  const user = await userModel.findOne({username: req.session.passport.user});
+  res.render('profile',{user, nav:false});
 });
 
 // Login post route
@@ -64,6 +63,21 @@ router.post('/login', passport.authenticate("local", {
   successRedirect: "/profile",
   failureRedirect: "/"
 }));
+
+// upload and change profile route
+router.post('/fileupload', isloggedIn, upload.single('Image') , async function(req,res,next){
+  const user = await userModel.findOne({username: req.session.passport.user});
+  user.profileImage = req.file.filename;
+  await user.save();
+  // res.send('uploaded');
+  res.redirect('/profile');
+});
+
+// createpost route
+router.get('/post', isloggedIn, async function(req, res, next) {
+  const user = await userModel.findOne({username: req.session.passport.user});
+  res.render('addpost',{user, nav:false});
+});
 
 // Logout route
 router.get('/logout', function(req, res, next) {
