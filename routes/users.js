@@ -37,7 +37,11 @@ const userSchema = new mongoose.Schema({
   boards: {
     type: Array, // Array of strings to represent board IDs or board names
     default: [] // Default state is an empty array
-  }
+  },
+  post: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Post"
+  }]
 });
 userSchema.plugin(plm);
 
