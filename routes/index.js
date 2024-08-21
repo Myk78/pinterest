@@ -53,13 +53,21 @@ router.post('/register', function(req, res, next) {
 //   });
 // });
 
+// users posts feeds route
+router.get('/feed', isloggedIn, async function(req, res, next) {
+  const user = await userModel
+                      .findOne({username: req.session.passport.user})
+                      .populate('post');
+  const post= await postModel.find().populate('user');
+  console.log(post);
+  res.render('feed',{user,post, nav:false});
+});
 
-// feed route
+// single user post route
 router.get('/userpost', isloggedIn, async function(req, res, next) {
   const user = await userModel
                       .findOne({username: req.session.passport.user})
                       .populate('post');
-                      console.log(user);
   res.render('userpost',{user, nav:false});
 });
 
@@ -68,7 +76,6 @@ router.get('/profile', isloggedIn, async function(req, res, next) {
   const user = await userModel
                       .findOne({username: req.session.passport.user})
                       .populate('post');
-                      console.log(user);
   res.render('profile',{user, nav:false});
 });
 

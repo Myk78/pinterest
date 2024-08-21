@@ -24,7 +24,7 @@
 <div class="cards flex flex-wrap gap-10 px-10 mt-10">
     <div>
         <div class="w-52 h-40 bg-zinc-200 rounded-lg overflow-hidden">
-            <img class="w-full h-full object-cover" src="/images/uploads/<%= user.post[0].postImage %>" alt="">
+            <img class="w-full h-full object-cover" src="/images/uploads/<%= user?.post[0]?.postImage %>" alt="">
         </div>
         <a href="/userpost" class="text-xl font-semibold mt-3">Your Posts</a >
         <h5 class="text-sm font-medium opacity-60">Total Pins <%= user.post.length %> </h5>
