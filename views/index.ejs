@@ -5,6 +5,9 @@
      flex items-center justify-center">
   <div class="w-96  bg-white px-10 py-10 rounded-[30px]">
     <h1 class="text-3xl text-center font-semibold text-zinc-700 tracking-tighter capitalize leading-none">Welcome To pinterest</h1>
+    <% if(error.length > 0){ %>
+      <p id="flash-message" class="error text-red-500 font-semibold my-3"><%= error %></p>
+    <% } %>
     <form action="/login" method="post">
       <input required class="border-2 rounded-md block mt-2 w-full px-3 py-2" type="text" name="username" placeholder="Username">
     <input class="border-2 rounded-md block mt-2 w-full px-3 py-2" type="password" name="password" placeholder="password">
@@ -17,6 +20,19 @@
     
   </div>
 </div>
+<script>
+  // Wait for the DOM to fully load
+  document.addEventListener('DOMContentLoaded', function() {
+    // Check if the flash message exists
+    const flashMessage = document.getElementById('flash-message');
+    if (flashMessage) {
+      // Set a timeout to hide the message after 3 seconds (3000 milliseconds)
+      setTimeout(function() {
+        flashMessage.style.display = 'none';
+      }, 3000);
+    }
+  });
+</script>
 
 <% include ./partials/footer.ejs %>
 

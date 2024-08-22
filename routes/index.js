@@ -13,13 +13,22 @@ passport.use(new localStrategy(userModel.authenticate()));
 passport.serializeUser(userModel.serializeUser());
 passport.deserializeUser(userModel.deserializeUser());
 
-/* GET home page. */
+/* login route */
 router.get('/', function(req, res, next) {
-  res.render('index',{nav:true});
+  // console.log(req.flash());
+  res.render('index',{nav:true,error:req.flash('error')});
 });
 
+// Login post route
+router.post('/login', passport.authenticate("local", {
+  successRedirect: "/profile",
+  failureRedirect: "/",
+  failureFlash: true,
+}));
+
+/* Register route */
 router.get('/register', function(req, res, next) {
-  res.render('register',{nav:true});
+  res.render('register',{nav:true,error:req.flash('error')});
 });
 
 // Register post route with error handling 
@@ -30,6 +39,7 @@ router.post('/register', function(req, res, next) {
   userModel.register(userdata, req.body.password, function(err, user) {
     if (err) {
       console.log(err); // Log the error for debugging
+      req.flash('error', err.message); // Set the error message in flash
       return res.redirect('/register'); // Redirect back to register page on error
     }
 
@@ -53,23 +63,6 @@ router.post('/register', function(req, res, next) {
 //   });
 // });
 
-// users posts feeds route
-router.get('/feed', isloggedIn, async function(req, res, next) {
-  const user = await userModel
-                      .findOne({username: req.session.passport.user})
-                      .populate('post');
-  const post= await postModel.find().populate('user');
-  console.log(post);
-  res.render('feed',{user,post, nav:false});
-});
-
-// single user post route
-router.get('/userpost', isloggedIn, async function(req, res, next) {
-  const user = await userModel
-                      .findOne({username: req.session.passport.user})
-                      .populate('post');
-  res.render('userpost',{user, nav:false});
-});
 
 // Profile route
 router.get('/profile', isloggedIn, async function(req, res, next) {
@@ -79,14 +72,7 @@ router.get('/profile', isloggedIn, async function(req, res, next) {
   res.render('profile',{user, nav:false});
 });
 
-
-// Login post route
-router.post('/login', passport.authenticate("local", {
-  successRedirect: "/profile",
-  failureRedirect: "/"
-}));
-
-// upload and change profile route
+// upload and change profilePic route
 router.post('/fileupload', isloggedIn, upload.single('Image') , async function(req,res,next){
   const user = await userModel.findOne({username: req.session.passport.user});
   user.profileImage = req.file.filename;
@@ -94,6 +80,15 @@ router.post('/fileupload', isloggedIn, upload.single('Image') , async function(r
   // res.send('uploaded');
   res.redirect('/profile');
 });
+
+// Show a userpost route
+router.get('/userpost', isloggedIn, async function(req, res, next) {
+  const user = await userModel
+                      .findOne({username: req.session.passport.user})
+                      .populate('post');
+  res.render('userpost',{user, nav:false});
+});
+
 
 // createpost route
 router.get('/post', isloggedIn, async function(req, res, next) {
@@ -113,6 +108,16 @@ router.post('/createpost', isloggedIn, upload.single('postimage') , async functi
   user.post.push(post._id);
   await user.save();
   res.redirect('/profile');
+});
+
+//  feedspage/homePage route
+router.get('/feed', isloggedIn, async function(req, res, next) {
+  const user = await userModel
+                      .findOne({username: req.session.passport.user})
+                      .populate('post');
+  const post= await postModel.find().populate('user');
+  console.log(post);
+  res.render('feed',{user,post, nav:false});
 });
 
 // Logout route
