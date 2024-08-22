@@ -1,8 +1,4 @@
-// login and register page 
-// profile page eith boards
-// feed page  /show with all different pins
-// save pin 
-// delete
-// logout
-// edit
-// upload
+first you install node & mongodb in your system 
+then import these files
+npm i mongoose passport passport-local  passport-local-mongoose express-session connect-flash multer uuid
+
