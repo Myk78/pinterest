@@ -115,9 +115,19 @@ router.get('/feed', isloggedIn, async function(req, res, next) {
   const user = await userModel
                       .findOne({username: req.session.passport.user})
                       .populate('post');
-  const post= await postModel.find().populate('user');
-  console.log(post);
-  res.render('feed',{user,post, nav:false});
+  const Post= await postModel.find().populate('user');
+  console.log(Post);
+  res.render('feed',{user,Post, nav:false});
+});
+
+//
+router.get('/feed/detail/:id', isloggedIn, async function(req, res, next) {
+  const user = await userModel
+                      .findOne({username: req.session.passport.user})
+                      .populate('post');
+  const post= await postModel.findById(req.params.id).populate('user');
+  // console.log(Post);
+  res.render('feeddetail',{user,post, nav:false});
 });
 
 // Logout route

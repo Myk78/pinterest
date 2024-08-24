@@ -1,6 +1,6 @@
 <% include ./partials/header.ejs %>
 <div class="w-full min-h-screen bg-zinc-800 px-10 py-5">
-    <% post.forEach(function(po){ %>
+    <% Post.forEach(function(po){ %>
     <div class="cards flex flex-wrap gap-10 ">
         <div class="card w-36 text-white bg-zinc-700 rounded-lg overflow-hidden">
             <div class="w-full h-40 bg-sky-200
@@ -9,8 +9,9 @@
             </div>
             <h3 class="text-md mt-3 opacity-60">@<%= po.user.username %></h3>
              
-            <h3 class="text-lg mt-3">Tile: <%= po.title %></h3>
-            <h5 class="text-sm">Description :<%= po.description %></h5>
+            <a href="/feed/detail/<%=po._id%>" class="text-lg mt-3">
+                <span class="text-sky-200">Title:</span> <%= po.title %></a>
+            <h5 class="text-sm "><span class="text-red-400">Description :</span><%= po.description %></h5>
         </div>
         <% }) %>
     </div>

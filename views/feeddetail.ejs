@@ -1,0 +1,88 @@
+<% include ./partials/header.ejs %>
+<div class="w-full min-h-screen bg-zinc-800 px-10 py-5">
+ <div class = "card-wrapper">
+    <div class = "card">
+      <!-- card left -->
+      <div class = "product-imgs">
+        <div class = "img-display">
+          <div class = "img-showcase">
+            <div class="relative">
+                <span class="picbtn w-10 h-10 absolute top-[100] buttom-0 right-0 rounded-full flex items-center justify-center object-fill ">
+                    <a href="/images/uploads/your-image.jpg" download="my-image.jpg">
+                        <i class="ri-download-2-line text-4xl text-gray-500"></i>
+                      </a>
+                      
+
+                </span>
+                <div class=" bg-zinc-200 rounded-lg overflow-hidden">
+                   <!-- //img -->
+                   <img class="w-full h-full object-cover" src="/images/uploads/<%= post.postImage %>" alt="Image">
+                </div>
+            </div>
+            
+        
+          </div>
+        </div>
+      </div>
+      <!-- card right -->
+      <div class = "product-content text-white">
+        <h2 class = "product-title text-gray-400"><%=post.title%></h2>
+        <a href = "#" class = "text-gray-400 capitalize">@<%= post.user.username %></a>
+        <div class = "text-slate-100">
+          <h2 class="my-5 ">Description: </h2>
+          <p class="inline-block"><%=post.description %></p>
+          <!-- <ul>
+            <li>Color: <span>Black</span></li>
+            <li>Available: <span>in stock</span></li>
+            <li>Category: <span>Shoes</span></li>
+            <li>Shipping Area: <span>All over the world</span></li>
+            <li>Shipping Fee: <span>Free</span></li>
+          </ul> -->
+        </div>
+  
+
+  
+        <div class = "social-links mt-10 ">
+          <p>Share At: </p>
+          <a href = "#" class="bg-gray-600">
+          </a>
+          <a href = "#" class="bg-gray-600">
+            <i class = " fab fa-twitter"></i>
+          </a>
+          <a href = "#" class="bg-gray-600">
+            <i class = " fab fa-instagram"></i>
+          </a>
+          <a href = "#" class="bg-gray-600">
+            <i class = " fab fa-whatsapp"></i>
+          </a>
+          <a href = "#" class="bg-gray-600">
+            <i class = " fab fa-pinterest"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>   
+</div>
+
+  <script>
+    const imgs = document.querySelectorAll('.img-select a');
+const imgBtns = [...imgs];
+let imgId = 1;
+
+imgBtns.forEach((imgItem) => {
+    imgItem.addEventListener('click', (event) => {
+        event.preventDefault();
+        imgId = imgItem.dataset.id;
+        slideImage();
+    });
+});
+
+function slideImage(){
+    const displayWidth = document.querySelector('.img-showcase img:first-child').clientWidth;
+
+    document.querySelector('.img-showcase').style.transform = `translateX(${- (imgId - 1) * displayWidth}px)`;
+}
+
+window.addEventListener('resize', slideImage);
+  </script>
+<% include ./partials/footer.ejs %>
